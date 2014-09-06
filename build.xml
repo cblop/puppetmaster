@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project name="PuppetMaster" default="dist" basedir=".">
+    <description>
+        PuppetMaster build file
+    </description>
+  <!-- set global properties for this build -->
+  <property name="src" location="src"/>
+  <property name="build" location="build"/>
+  <property name="dist"  location="dist"/>
+  
+<path id="project.class.path">
+    <fileset dir="lib/smack">
+        <include name="**/*.jar" />
+    </fileset>
+    <fileset dir="lib/jena">
+        <include name="**/*.jar" />
+    </fileset>
+    <fileset dir="lib/json">
+        <include name="**/*.jar" />
+    </fileset>
+    <fileset dir="lib/jason">
+        <include name="**/*.jar" />
+    </fileset>
+    <fileset dir="lib/mongodb">
+        <include name="**/*.jar" />
+    </fileset>
+    <!--
+    <pathelement location="build" />
+    -->
+  </path>
+  
+  <property name="dep_cp" value="${toString:project.class.path}" />
+
+  <target name="init">
+    <!-- Create the build directory structure used by compile -->
+    <mkdir dir="${build}"/>
+	<mkdir dir="${dist}"/>
+  </target>
+
+  <target name="compile" depends="init"
+        description="compile the source " >
+		
+    <!-- Compile the java code from ${src} into ${build} -->
+    <javac srcdir="${src}" destdir="${build}">
+	<classpath refid="project.class.path"/>
+    </javac>
+  </target>
+
+  <target name="dist" depends="compile"
+        description="generate the distribution" >
+	    <copy todir="${dist}" flatten="true">
+	<path>
+		<pathelement path="${dep_cp}"/>
+	</path>
+    </copy>
+
+    <!--  Now can set up the paths for these jar files  -->
+    <path id="dist-classpath">
+      <fileset dir="${dist}">
+        <include name="**/*.jar"/>
+      </fileset>
+    </path>
+    <property name="dist_cp" value="${toString:dist-classpath}"/>
+    <manifestclasspath property="lib.list" jarfile="puppetmaster.jar">
+      <classpath refid="dist-classpath"/>
+    </manifestclasspath>
+
+    <!-- Put everything in ${build} into the MyProject-${DSTAMP}.jar file -->
+    <jar jarfile="${dist}/puppetmaster.jar" basedir="${build}">
+      <manifest>
+                <attribute name="Main-Class" value="edu.bath.puppetmaster.RunShow"/>
+                <attribute name="Class-Path" value=". ${lib.list}"/>
+            </manifest>
+          </jar>
+  </target>
+
+ <target name="clean"
+        description="clean up" >
+    <!-- Delete the ${build} and ${dist} directory trees -->
+    <delete failonerror="no" dir="${build}"/>
+    <delete failonerror="no" dir="${dist}"/>
+  </target>
+
+  <target name="run" depends="dist">
+    <java classname="edu.bath.puppetmaster.RunShow" classpath="${dist_cp}" fork="true">
+  </java>
+    </target>
+
+</project>
