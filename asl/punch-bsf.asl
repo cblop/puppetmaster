@@ -93,6 +93,9 @@ dominance(1).
 	   anim(rest);
 	   !changeMood.
 
++!resetScene : not direction(left) & not direction(right)
+  <- _.
+
 +currentScene(judy) : _
 	<- !resetScene;
 	   !moveTo(stageLeft);
@@ -109,6 +112,7 @@ dominance(1).
 +otherPos(_) : skit(hide)
 	<- !hide.
 
+/*
 +!hide : otherPos(stageLeft)
 	<- !moveTo(offstageRight).
 
@@ -117,6 +121,11 @@ dominance(1).
 
 +!hide : otherPos(stageCentre)
 	<- !moveTo(stageCentre).
+*/
+
++!hide : _
+  <- !moveTo(stageCentre).
+
 	   
 -currentScene(_) : _
 	<- !moveTo(offstageLeft);
