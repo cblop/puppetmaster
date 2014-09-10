@@ -105,6 +105,9 @@ public class BsfAgent extends AgArch {
     ag.initAg(m_aslpath);
   }
 
+  public void cleanup() {
+    m_pub.cleanup();
+  }
 
   private void initSensors()
   {

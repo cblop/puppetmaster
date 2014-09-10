@@ -4,6 +4,9 @@ import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.Queue;
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
+import java.io.IOException;
 
 import jason.JasonException;
 
@@ -19,8 +22,8 @@ public class RunShow {
   private static Queue<String> sceneQueue; 
   private static EventPublisher pubber;
 
-  public static void main(String[] args) throws XMPPException, JasonException {
-    eventNode = "evnode";
+  public static void main(String[] args) throws XMPPException, JasonException, IOException {
+    eventNode = "events";
 
     EventSubscriber esub;
 
@@ -38,7 +41,25 @@ public class RunShow {
     // Seems like it's bad for subscribers to create nodes?
     esub.subscribeTo(eventNode);
 
+    /*
+    try {
+      pubber.publishEvent("police", "move", "stageCentre");
+    } catch (UnsupportedEncodingException e) {
+      e.printStackTrace();
+    }
+    */
+
     //BsfAgent punchAgent = new BsfAgent(conn, "judy", "judyuser", "punch-bsf.asl", eventNote);
+
+    new Thread() {
+      public void run() {
+        try {
+          readKeyboard();
+        }
+        catch(IOException ex){
+        }
+      }
+    }.start();
 
     new Thread() {
       public void run() {
@@ -63,6 +84,28 @@ public class RunShow {
     sceneQueue.add("judy");
 
     nextScene();
+
+  }
+
+  public static void readKeyboard() throws IOException {
+    BufferedReader in = new BufferedReader(new InputStreamReader(System.in));
+String line = "";
+
+   while (line.equalsIgnoreCase("q") == false) {
+       line = in.readLine();
+   }
+
+   in.close();
+
+   System.out.println("Exiting...");
+
+   /*
+   pubber.cleanup();
+   punchAgent.cleanup();
+   judyAgent.cleanup();
+   policeAgent.cleanup();
+   System.exit(0);
+   */
 
   }
 
@@ -91,5 +134,6 @@ public class RunShow {
     }
 
   }
+  
 
 }
