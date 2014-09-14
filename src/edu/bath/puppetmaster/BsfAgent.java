@@ -40,6 +40,7 @@ public class BsfAgent extends AgArch {
   private String m_server;
   private String m_pwd;
   private String m_aslpath;
+  private String m_node;
 
   // Percept buffer
   private ArrayList<Literal> m_plist;
@@ -68,6 +69,7 @@ public class BsfAgent extends AgArch {
     m_aslpath = path + "\\asl\\" + aslfile;
     m_name = jid;
     m_plist = new ArrayList<Literal>();
+    m_node = nodeName;
     try {
       m_sc = new SensorClient(server, jid, password);
       //m_pub = new EventPublisher(m_sc.getConnection(), "user4", "testuser4", nodeName);
@@ -116,7 +118,7 @@ public class BsfAgent extends AgArch {
 
 
       // m_sc.addHandler("NODE_NORM", new ReadingHandler() {
-      m_sc.addHandler("events", new ReadingHandler() {
+      m_sc.addHandler(m_node, new ReadingHandler() {
         public void handleIncomingReading(String node, String rdf) {
           try {
             JsonReading jr = new JsonReading();
@@ -227,9 +229,9 @@ public class BsfAgent extends AgArch {
       });
 
       // SensorClient for percepts
-      m_sc.subscribe("events");
+      m_sc.subscribe(m_node);
     } catch (XMPPException xe) {
-      System.out.println("failed to subscribe: " + "events");
+      System.out.println("failed to subscribe: " + m_node);
     }
     }
 
