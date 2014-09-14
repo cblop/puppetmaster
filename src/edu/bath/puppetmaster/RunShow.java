@@ -23,6 +23,8 @@ public class RunShow {
   private static EventPublisher pubber;
 
   public static void main(String[] args) throws XMPPException, JasonException, IOException {
+    sceneQueue = new LinkedList<String>();
+
     eventNode = "events";
 
     EventSubscriber esub;
@@ -33,8 +35,8 @@ public class RunShow {
 
     //Connection conn = esub.getConnection();
 
-    punchAgent = new BsfAgent("localhost", "punch", "punchuser", "punch-bsf.asl", eventNode);
-    judyAgent = new BsfAgent("localhost", "judy", "judyuser", "judy-bsf.asl", eventNode);
+    punchAgent = new BsfAgent("localhost", "punch", "punchuser", "punch.asl", eventNode);
+    judyAgent = new BsfAgent("localhost", "judy", "judyuser", "judy.asl", eventNode);
     policeAgent = new BsfAgent("localhost", "police", "policeuser", "police.asl", eventNode);
 
     // This has to come after for some reason
@@ -77,13 +79,7 @@ public class RunShow {
       }
     }.start();
 
-    sceneQueue = new LinkedList<String>();
-
-    // don't forget! FIFO!
-    sceneQueue.add("police");
-    sceneQueue.add("judy");
-
-    nextScene();
+    //startShow();
 
   }
 
@@ -99,13 +95,11 @@ String line = "";
 
    System.out.println("Exiting...");
 
-   /*
    pubber.cleanup();
    punchAgent.cleanup();
    judyAgent.cleanup();
    policeAgent.cleanup();
    System.exit(0);
-   */
 
   }
 
@@ -117,6 +111,27 @@ String line = "";
       e.printStackTrace();
     }
 
+  }
+
+  public static void startShow() throws XMPPException {
+
+    System.out.println("Starting the show");
+    for (String item : sceneQueue) {
+      sceneQueue.remove();
+    }
+
+    try {
+      punchAgent.init();
+      policeAgent.init();
+    } catch (Exception e) {
+      e.printStackTrace();
+    }
+
+    // don't forget! FIFO!
+    sceneQueue.add("police");
+    sceneQueue.add("judy");
+
+    nextScene();
   }
 
   public static void nextScene() throws XMPPException {

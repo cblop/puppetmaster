@@ -64,22 +64,14 @@ otherPos(offStageLeft).
 +scene(X) : _
 	<- -+currentScene(X).
 
-+!resetScene : direction(left)
++!resetScene : true
 	<- -+valence(1);
+     .print("Police reset");
 	   -+arousal(1);
 	   -+dominance(-1);
 	   -+health(5);
 	   -+skit(free);
-	   anim(rest);
-	   !changeMood.
-
-+!resetScene : direction(right)
-	<- -+valence(1);
-	   -+arousal(1);
-	   -+dominance(-1);
-	   -+health(5);
-	   -+skit(free);
-	   !changeDirection;
+	   -+direction(left);
 	   anim(rest);
 	   !changeMood.
 
@@ -91,28 +83,39 @@ otherPos(offStageLeft).
 
 // could generalise this to X
 // check the emotion
-+currentSkit(search) : _
-	<- !lookForPunch.
++currentSkit(search)
+	<- !arrestPunch.
 		
 -!g[.print("Fail plan triggered")].
 
+/*
 +currentSkit(search) : audienceYes
 	<-  anim(front);
 		!speak(search);
 		.wait(2000);
 		-audienceYes;
 		!lookForPunch.
+*/
 		
-+!noiseDetected : _
++!noiseDetected
 	<- _.
 
 		
-+input(_) : _
++input(_)
 	<- -+audienceYes;
 		.print("AUDIENCE SAYS YES").
+
++!arrestPunch
+  <- !lookForPunch;
+     !subduePunch.
+
++!subduePunch
+  <- anim(hit);
+     ?otherPos(X);
+     move(X).
 		
 +!lookForPunch : canSeeOther
-	<- _.
+	<- .print("Police can see Punch").
 		
 +!lookForPunch : not canSeeOther
 	<-  anim(front);

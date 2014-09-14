@@ -73,6 +73,11 @@ public class EventSubscriber extends SensorClient {
                             	RunShow.nextScene();
                             }
 
+                            else if (functor.m_object.toString().equals("start")) {
+                              System.out.println("Starting again");
+                              RunShow.startShow();
+                            }
+
 					}
                     
 				} catch (Exception e) {

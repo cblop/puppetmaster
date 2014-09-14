@@ -169,8 +169,8 @@ public abstract class Sensor {
 	 */
 	public void cleanup() {
 		try {
-			//mgr.deleteNode(nodeName);
-      leaf.deleteAllItems();
+			mgr.deleteNode(nodeName);
+      //leaf.deleteAllItems();
 		} catch (XMPPException e) {
 			System.out.println("Cleanup failed - Failure in deleteNode(" + nodeName + ")");
 		}
