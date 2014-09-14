@@ -25,7 +25,7 @@ public class RunShow {
   public static void main(String[] args) throws XMPPException, JasonException, IOException {
     sceneQueue = new LinkedList<String>();
 
-    eventNode = "events";
+    eventNode = "puppets";
 
     EventSubscriber esub;
 
