@@ -29,15 +29,15 @@ public class RunShow {
 
     EventSubscriber esub;
 
-    esub = new EventSubscriber("localhost", "log", "loguser", true);
+    esub = new EventSubscriber("cblop.com", "log", "loguser", true);
 
-    pubber = new EventPublisher("localhost", "director", "directoruser", eventNode);
+    pubber = new EventPublisher("cblop.com", "director", "directoruser", eventNode);
 
     //Connection conn = esub.getConnection();
 
-    punchAgent = new BsfAgent("localhost", "punch", "punchuser", "punch.asl", eventNode);
-    judyAgent = new BsfAgent("localhost", "judy", "judyuser", "judy.asl", eventNode);
-    policeAgent = new BsfAgent("localhost", "police", "policeuser", "police.asl", eventNode);
+    punchAgent = new BsfAgent("cblop.com", "punch", "punchuser", "punch.asl", eventNode);
+    judyAgent = new BsfAgent("cblop.com", "judy", "judyuser", "judy.asl", eventNode);
+    policeAgent = new BsfAgent("cblop.com", "police", "policeuser", "police.asl", eventNode);
 
     // This has to come after for some reason
     // Seems like it's bad for subscribers to create nodes?
