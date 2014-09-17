@@ -9,21 +9,6 @@ name(police).
 direction(left).
 skit(free).
 
-/*
-locations(offstageLeft, stageLeft, stageCentre, stageRight, offstageRight).
-
-neighbours(X, Y) :- locations(X, Y, _, _, _) | locations(_, X, Y, _, _)
-	| locations(_, _, X, Y, _) | locations(_, _, _, X, Y).
-	
-immLeft(X, Y) :- neighbours(X, Y).
-immRight(X, Y) :- neighbours(Y, X).
-neighbour(X, Y) :- immLeft(X, Y) | immRight(X, Y).
-
-leftOf(X, Y) :- immLeft(X, Y) |
-				locations(X, _, _, _, _, _) | locations(_, X, _, Y, _) |
-				locations(_, _, _, _, _, Y).
-*/
-
 speed(medium).
 
 waitTime(slow, 3000).

@@ -14,20 +14,6 @@ direction(right).
 skit(free).
 
 
-/*
-locations(offstageLeft, stageLeft, stageCentre, stageRight, offstageRight).
-
-neighbours(X, Y) :- locations(X, Y, _, _, _) | locations(_, X, Y, _, _)
-	| locations(_, _, X, Y, _) | locations(_, _, _, X, Y).
-	
-immLeft(X, Y) :- neighbours(X, Y).
-immRight(X, Y) :- neighbours(Y, X).
-
-leftOf(X, Y) :- immLeft(X, Y) |
-				locations(X, _, _, _, _, _) | locations(_, X, _, Y, _) |
-				locations(_, _, _, _, _, Y).
-*/
-
 skit(chase) :- feeling(furious | angry) & other(judy).
 
 feeling(0, -1, annoyed, slow).
@@ -110,6 +96,9 @@ dominance(1).
 
 +!hide : otherPos(stageCentre)
 	<- !moveTo(stageCentre).
+
++!hide : emotion(furious) | emotion(angry)
+  <- -+skit(attack).
 
 +!hide
   <- .print("Not hiding").
