@@ -22,6 +22,10 @@ valence(1).
 arousal(1).
 dominance(1).
 
+alive(yes).
+
+
+/*
 feeling(0, -1, annoyed, slow).
 feeling(0, 0, alert, slow).
 feeling(0, 1, vigilant, medium).
@@ -31,6 +35,7 @@ feeling(-1, 1, furious, fast).
 feeling(1, -1, vicious, fast).
 feeling(1, 0, malicious, fast).
 feeling(1, 1, excited, medium).
+*/
 
 speech(greeting, greeting).
 speech(search, search).
@@ -38,8 +43,8 @@ speech(X, happy) :- X == alert | X == vigilant | X == excited.
 speech(X, annoyed) :- X == sulky | X == annoyed.
 speech(X, angry) :- X == angry | X == furious | X == vicious | X == malicious.
 
-pos(offStageRight).
-otherPos(offStageLeft).
+pos(offstageRight).
+otherPos(offstageLeft).
 
 /* Initial goals */
 // Taunt Punch. Must first greet him and ask questions.
@@ -83,24 +88,62 @@ otherPos(offStageLeft).
 */
 		
 +!noiseDetected
-	<- _.
+	<- pass.
 
 		
 +input(_)
 	<- -+audienceYes;
 		.print("AUDIENCE SAYS YES").
 
-+!arrestPunch
-  <- !lookForPunch;
++!arrestPunch : emotion(angry) | emotion(furious)
+  <- ?alive(yes);
      !subduePunch.
 
++!arrestPunch : health(0)
+  <- ?alive(yes);
+     !die.
+
++!arrestPunch
+  <- ?alive(yes);
+     !lookForPunch;
+     !talkToPunch;
+     !arrestPunch.
+
+-!arrestPunch
+  <- .print("Police should be dead now").
+
++!talkToPunch
+  <- ?emotion(X);
+     !speak(X);
+     .wait(2000);
+     ?otherPos(Y);
+     //!moveNextTo(Y);
+     !moveTowardsOther.
+
++!subduePunch : health(0)
+ <- !die.
+
++!subduePunch : otherPos(stageCentre)
+  <- .wait(1000);
+     !moveTo(stageRight);
+     anim(hit).
+
 +!subduePunch
-  <- anim(hit);
-     ?otherPos(X);
-     move(X).
+  <- .wait(1000);
+     !moveTowardsOther;
+     anim(hit).
+
+/*
++!subduePunch : not canSeeOther
+  <- !arrestPunch.
+*/
+
++!lookForPunch : emotion(angry) | emotion(furious)
+ <- !subduePunch.
 		
 +!lookForPunch : canSeeOther
-	<- .print("Police can see Punch").
+	<- ?otherPos(X);
+     .print("Police can see Punch: ", X).
 		
 +!lookForPunch : not canSeeOther
 	<-  anim(front);
@@ -120,7 +163,7 @@ otherPos(offStageLeft).
 		!increaseArousal(S);
 		!lookForPunch.
 
--!lookForPunch : not emotion(sulky)
+-!lookForPunch : not emotion(sulky) & not canSeeOther
 	<- .random(R);
 		.random(S);
 		!decreaseValence(0.1);
@@ -143,8 +186,11 @@ otherPos(offStageLeft).
 
 // check emotion here
 
-+otherPos(X) : true
++otherPos(X) : alive(yes)
 	<- !evade.
+
++otherPos(X)
+  <- pass.
 	
 +otherAction(X) : X == hit
 	<- .print("Police is getting hit");
@@ -182,10 +228,13 @@ otherPos(offStageLeft).
 	
 +!die
 	<- .print("Police is dead.");
-	+dead;
+	-+alive(no);
 	anim(dead);
 	.wait(2000);
-	-currentScene(_).
+  //-+skit(dead);
+  //-+scene(dead);
+  !moveTo(offstageRight).
+	//-currentScene(_).
 	//.send(narrative, achieve, endScene).
 
 

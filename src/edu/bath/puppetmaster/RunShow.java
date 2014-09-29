@@ -25,7 +25,7 @@ public class RunShow {
   public static void main(String[] args) throws XMPPException, JasonException, IOException {
     sceneQueue = new LinkedList<String>();
 
-    eventNode = "puppets";
+    eventNode = "ev";
 
     EventSubscriber esub;
 
@@ -36,12 +36,16 @@ public class RunShow {
     //Connection conn = esub.getConnection();
 
     punchAgent = new BsfAgent("cblop.com", "punch", "punchuser", "punch.asl", eventNode);
-    judyAgent = new BsfAgent("cblop.com", "judy", "judyuser", "judy.asl", eventNode);
+    //judyAgent = new BsfAgent("cblop.com", "judy", "judyuser", "judy.asl", eventNode);
     policeAgent = new BsfAgent("cblop.com", "police", "policeuser", "police.asl", eventNode);
 
     // This has to come after for some reason
     // Seems like it's bad for subscribers to create nodes?
     esub.subscribeTo(eventNode);
+
+    //punchAgent.setupLogger();
+    //judyAgent.setupLogger();
+    //policeAgent.setupLogger();
 
     /*
     try {
@@ -68,11 +72,13 @@ public class RunShow {
         punchAgent.run();
       }
     }.start();
+    /*
     new Thread() {
       public void run() {
         judyAgent.run();
       }
     }.start();
+    */
     new Thread() {
       public void run() {
         policeAgent.run();
@@ -97,7 +103,7 @@ String line = "";
 
    pubber.cleanup();
    punchAgent.cleanup();
-   judyAgent.cleanup();
+   //judyAgent.cleanup();
    policeAgent.cleanup();
    System.exit(0);
 
@@ -120,16 +126,14 @@ String line = "";
       sceneQueue.remove();
     }
 
-    try {
-      punchAgent.init();
-      policeAgent.init();
-    } catch (Exception e) {
-      e.printStackTrace();
-    }
+    // What's the memory situation here?
+    punchAgent.reset();
+    //judyAgent.reset();
+    policeAgent.reset();
 
     // don't forget! FIFO!
     sceneQueue.add("police");
-    sceneQueue.add("judy");
+    //sceneQueue.add("judy");
 
     nextScene();
   }

@@ -16,6 +16,7 @@ skit(free).
 
 skit(chase) :- feeling(furious | angry) & other(judy).
 
+/*
 feeling(0, -1, annoyed, slow).
 feeling(0, 0, alert, slow).
 feeling(0, 1, vigilant, medium).
@@ -25,6 +26,7 @@ feeling(-1, 1, furious, fast).
 feeling(1, -1, vicious, fast).
 feeling(1, 0, malicious, fast).
 feeling(1, 1, excited, medium).
+*/
 
 emotion(alert).
 
@@ -38,8 +40,8 @@ energy(5).
 
 interruption.
 
-pos(offStageLeft).
-otherPos(offStageRight).
+pos(offstageLeft).
+otherPos(offstageRight).
 
 
 valence(0).
@@ -59,7 +61,7 @@ dominance(1).
 	<- ?leftOf(Y, Z).
 */
 
-+scene(X) : _
++scene(X)
 	<- -+currentScene(X).
 	
 +!resetScene : true
@@ -89,21 +91,55 @@ dominance(1).
 	<- !hide.
 
 +!hide : otherPos(stageLeft)
-	<- !moveTo(offstageRight).
+	<- !moveTo(offstageRight);
+     .wait(2000);
+     .random(R);
+     .random(S);
+     !increaseArousal(R);
+     !decreaseValence(S);
+     !attackCheck.
 
 +!hide : otherPos(stageRight)
-	<- !moveTo(offstageLeft).
+	<- !moveTo(offstageLeft);
+     .wait(2000);
+     .random(R);
+     .random(S);
+     !increaseArousal(R);
+     !decreaseValence(S);
+     !attackCheck.
 
 +!hide : otherPos(stageCentre)
-	<- !moveTo(stageCentre).
+	<- !moveTo(stageCentre);
+     .wait(2000);
+     .random(R);
+     .random(S);
+     !increaseArousal(R);
+     !increaseValence(S);
+     !attackCheck.
 
-+!hide : emotion(furious) | emotion(angry)
-  <- -+skit(attack).
++!attackCheck : emotion(furious) | emotion(angry)
+  <- .print("Punch decides to attack");
+     -+skit(attack).
+
++!attackCheck
+  <- .print("Punch does not want to attack").
+
++skit(attack)
+  <- .print("Attack skit");
+      anim(hit);
+     !chase.
+
++otherPos(_) : skit(attack)
+  <- .print("Punch: attack");
+      anim(hit);
+     !chase.
+
++skit(attack)
+  <- .print("PUNCH ATTACK!").
 
 +!hide
   <- .print("Not hiding").
 
-	   
 -currentScene(_) : _
 	<- !moveTo(offstageLeft);
 		.wait(2000);
@@ -119,23 +155,23 @@ dominance(1).
 		anim(rest);
 		?waitTime(X, Y);
 		.wait(Y);
-	    !boast;
-	   .wait(Y);
-	   .random(R);
-	   !increaseValence(R);
-	   .print("Punch has achieved his goal");
-	   .wait(2000);
-	   -currentScene(_).
+    !boast;
+   .wait(Y);
+   .random(R);
+   !increaseValence(R);
+   .print("Punch has achieved his goal");
+   .wait(2000);
+   -currentScene(_).
 
 +!dominate : not otherPos(offstageRight)
 	<- ?speed(X);
 		anim(X);
 		?waitTime(X, Y);
-	   .wait(Y);
-	   !silenceOther;
-	   .random(R);
-	   !decreaseValence(R);
-	   !dominate.
+   .wait(Y);
+   !silenceOther;
+   .random(R);
+   !decreaseValence(R);
+   !dominate.
 	
 +!silenceOther : emotion(sulky) | emotion(annoyed)
 	<- !changeDirection; // want to do this with a probability
@@ -167,23 +203,32 @@ dominance(1).
 	   .random(S);
 	   !increaseArousal(S). // randomly
 	   
-+!chase : pos(X) & otherPos(Y) & not (X == Y)
++!chase : pos(X) & otherPos(Y) & not (X == Y) & not (X == offstageRight)
 	<- .random(R);
-		anim(rest);
 		!increaseArousal(R);
 		!moveTowardsOther.
 
-+!chase : pos(X) & otherPos(Y) & X == Y
++!chase : pos(X) & otherPos(Y) & immLeft(X, Y) & direction(right)
 	<- .random(R);
 		!increaseArousal(R);
 		!hitOther.
 
-+!chase : pos(X) & otherPos(Y) & neighbour(X, Y)
-	<- !hitOther.
++!chase : pos(X) & otherPos(Y) & immRight(X, Y) & direction(left)
+	<- .random(R);
+		!increaseArousal(R);
+		!hitOther.
+
++!chase : otherPos(offstageRight)
+  <- !moveTo(offstageLeft).
+
++!chase
+  <- !moveTowardsOther.
 
 // check the other isn't dead
 +!hitOther : true
-	<- anim(hit).
+	<- ?emotion(X);
+    say(X); 
+    anim(hit).
 
 +!say_hi : true
 	<- !speak(greeting);
@@ -198,4 +243,17 @@ dominance(1).
 
 +!speak(X) : not speaking
 	<- say(X).
+
++otherAction(X) : X == hit
+  <- !evade.
+
++!evade
+  <- ?otherPos(X);
+    ?oppositeOf(X, Y);
+    !moveTo(Y).
+
++otherAction(X) : X == dead
+  <- !moveTo(offstageLeft);
+     .wait(2000);
+     nextScene(next).
 	

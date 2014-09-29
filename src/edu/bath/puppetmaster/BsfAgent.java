@@ -1,7 +1,8 @@
 package edu.bath.puppetmaster;
 
 import jason.JasonException;
-import jason.architecture.AgArch;
+//import jason.architecture.AgArch;
+import jason.architecture.MindInspectorAgArch;
 import jason.asSemantics.ActionExec;
 import jason.asSemantics.Agent;
 import jason.asSemantics.Circumstance;
@@ -30,7 +31,7 @@ import edu.bath.sensorframework.JsonReading.Value;
 import edu.bath.sensorframework.client.ReadingHandler;
 import edu.bath.sensorframework.sensor.Sensor;
 
-public class BsfAgent extends AgArch {
+public class BsfAgent extends MindInspectorAgArch {
 
   // Make sure to implement JeeHang's NormReadingHandler
   private static Logger m_logger = Logger.getLogger(BsfAgent.class.getName());
@@ -49,6 +50,7 @@ public class BsfAgent extends AgArch {
   // sensorclients
   private SensorClient m_sc;
   private EventPublisher m_pub;
+  private Agent ag;
 
   /*
      public static void main(String[] args) {
@@ -80,6 +82,7 @@ public class BsfAgent extends AgArch {
     }
     initSensors();
     makeAgent();
+    //setupLogger();
 
   }
 
@@ -100,15 +103,26 @@ public class BsfAgent extends AgArch {
 
   }
 
-  private void makeAgent() throws JasonException {
+  public void makeAgent() throws JasonException {
     // Create agent for reasoning
-    Agent ag = new Agent();
+    ag = new Agent();
     new TransitionSystem(ag, new Circumstance(), new Settings(), this);
     ag.initAg(m_aslpath);
   }
 
   public void cleanup() {
     m_pub.cleanup();
+  }
+
+  public void reset() {
+    ag.getBB().clear();
+    ag.getPL().clear();
+    try {
+      ag.initAg(m_aslpath);
+    } catch (JasonException e) {
+      System.out.println("Agent reset failed");
+
+    }
   }
 
   private void initSensors()
@@ -166,8 +180,8 @@ public class BsfAgent extends AgArch {
               }
               if (functor.m_object.toString().equals("move")) {
                 //System.out.println(termList.getFirst());
-                System.out.println(agname.m_object.toString());
-                System.out.println(value.m_object.toString());
+                //System.out.println(agname.m_object.toString());
+                //System.out.println(value.m_object.toString());
                 // Something needs to be published that an agent is speaking
                 if (!agname.m_object.toString().equals(m_name)) {
                   m_percept = "otherMoved(" + value.m_object.toString() + ").";
@@ -208,6 +222,12 @@ public class BsfAgent extends AgArch {
                   m_percept = "scene(" + value.m_object.toString() + ").";
                   m_plist.add(Literal.parseLiteral("scene(" + value.m_object.toString() + ")."));
                 }
+              }
+              if (functor.m_object.toString().equals("skit")) {
+                //System.out.println(termList.getFirst());
+                // Something needs to be published that an agent is speaking
+                  m_percept = "skit(" + value.m_object.toString() + ").";
+                  m_plist.add(Literal.parseLiteral("skit(" + value.m_object.toString() + ")."));
               }
 
               if (functor.m_object.toString().equals("input")) {
@@ -343,5 +363,12 @@ public class BsfAgent extends AgArch {
       public void checkMail() {
 
       }	
+
+      public void setupLogger() {
+        //setupMindInspector("web(cycle,html,history)");
+        setupMindInspector("gui(cycle,html,history)");
+
+      }
+
 
     }

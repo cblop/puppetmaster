@@ -62,9 +62,7 @@ public class EventSubscriber extends SensorClient {
 					Value functor = jr.findValue("FUNCTOR"); 
 					Value value = jr.findValue("VALUE"); 
 
-          System.out.println(agname.m_object.toString());
-          System.out.println(functor.m_object.toString());
-          System.out.println(value.m_object.toString());
+          System.out.println(agname.m_object.toString() + ", " + functor.m_object.toString() + ", " + value.m_object.toString());
 					
 					
 					if (functor != null && value != null && agname != null) {
