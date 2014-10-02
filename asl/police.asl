@@ -51,8 +51,6 @@ otherPos(offstageLeft).
 //!makeConfess(punch).
 
 /* Plans */
-+scene(X) : _
-	<- -+currentScene(X).
 
 +!resetScene : true
 	<- -+valence(1);

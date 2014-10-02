@@ -1,4 +1,6 @@
++input(_)
+	<- -+audienceYes;
+		.print("AUDIENCE SAYS YES").
 
-// no skit, say whatever they feel like
-dialogue(X) :- skit(free) & emotion(X).
-dialogue(punch, judy, chase, hello).
++scene(X)
+  <- -+currentScene(X).

@@ -16,6 +16,7 @@ import org.jivesoftware.smack.XMPPException;
 public class RunShow {
   private static BsfAgent punchAgent;
   private static BsfAgent judyAgent;
+  private static BsfAgent joeyAgent;
   private static BsfAgent policeAgent;
   private static boolean debug = true;
   private static String eventNode;
@@ -29,15 +30,16 @@ public class RunShow {
 
     EventSubscriber esub;
 
-    esub = new EventSubscriber("cblop.com", "log", "loguser", true);
+    esub = new EventSubscriber("localhost", "log", "loguser", true);
 
-    pubber = new EventPublisher("cblop.com", "director", "directoruser", eventNode);
+    pubber = new EventPublisher("localhost", "director", "directoruser", eventNode);
 
     //Connection conn = esub.getConnection();
 
-    punchAgent = new BsfAgent("cblop.com", "punch", "punchuser", "punch.asl", eventNode);
-    //judyAgent = new BsfAgent("cblop.com", "judy", "judyuser", "judy.asl", eventNode);
-    policeAgent = new BsfAgent("cblop.com", "police", "policeuser", "police.asl", eventNode);
+    punchAgent = new BsfAgent("localhost", "punch", "punchuser", "punch.asl", eventNode);
+    judyAgent = new BsfAgent("localhost", "judy", "judyuser", "judy.asl", eventNode);
+    joeyAgent = new BsfAgent("localhost", "joey", "joeyuser", "joey.asl", eventNode);
+    policeAgent = new BsfAgent("localhost", "police", "policeuser", "police.asl", eventNode);
 
     // This has to come after for some reason
     // Seems like it's bad for subscribers to create nodes?
@@ -72,13 +74,16 @@ public class RunShow {
         punchAgent.run();
       }
     }.start();
-    /*
     new Thread() {
       public void run() {
         judyAgent.run();
       }
     }.start();
-    */
+    new Thread() {
+      public void run() {
+        joeyAgent.run();
+      }
+    }.start();
     new Thread() {
       public void run() {
         policeAgent.run();
@@ -103,7 +108,7 @@ String line = "";
 
    pubber.cleanup();
    punchAgent.cleanup();
-   //judyAgent.cleanup();
+   judyAgent.cleanup();
    policeAgent.cleanup();
    System.exit(0);
 
@@ -128,12 +133,14 @@ String line = "";
 
     // What's the memory situation here?
     punchAgent.reset();
-    //judyAgent.reset();
+    judyAgent.reset();
+    joeyAgent.reset();
     policeAgent.reset();
 
     // don't forget! FIFO!
+    sceneQueue.add("intro");
+    sceneQueue.add("judy");
     sceneQueue.add("police");
-    //sceneQueue.add("judy");
 
     nextScene();
   }

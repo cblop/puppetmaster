@@ -1,6 +1,9 @@
 sudo ejabberdctl register director cblop.com directoruser
 sudo ejabberdctl register punch cblop.com punchuser
 sudo ejabberdctl register judy cblop.com judyuser
+sudo ejabberdctl register joey cblop.com joeyuser
+sudo ejabberdctl register croc cblop.com crocuser
+sudo ejabberdctl register baby cblop.com babyuser
 sudo ejabberdctl register police cblop.com policeuser
 sudo ejabberdctl register anim cblop.com animuser
 sudo ejabberdctl register log cblop.com loguser

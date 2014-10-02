@@ -61,9 +61,6 @@ dominance(1).
 	<- ?leftOf(Y, Z).
 */
 
-+scene(X)
-	<- -+currentScene(X).
-	
 +!resetScene : true
 	<- -+valence(0);
      .print("Punch reset");
