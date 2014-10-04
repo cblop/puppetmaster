@@ -138,9 +138,9 @@ String line = "";
     policeAgent.reset();
 
     // don't forget! FIFO!
-    sceneQueue.add("intro");
+    //sceneQueue.add("intro");
     sceneQueue.add("judy");
-    sceneQueue.add("police");
+    //sceneQueue.add("police");
 
     nextScene();
   }

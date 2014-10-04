@@ -11,9 +11,11 @@ skit(free).
 
 health(5).
 
-valence(1).
-arousal(1).
+valence(0).
+arousal(0).
 dominance(-1).
+
+punchPos(offstageLeft).
 
 !changeMood.
 
@@ -25,20 +27,82 @@ dominance(-1).
      .wait(2000);
      say(hello);
      .wait(2000);
-     say(seepunch);
+     !askAudience.
+
+
++!askAudience
+  <- say(seepunch);
      .wait("+audienceYes", 5000);
      say(seepunchResponse);
      .wait(2000);
      !callPunch.
 
--!sayHello
-  <- say(seepunchNoResponse).
+-!askAudience : emotion(sulky)
+  <- say(giveUp);
+     .wait(2000);
+     !moveTo(offstageRight).
+
+-!askAudience
+  <- say(seepunchNoResponse);
+    !getSad;
+    !askAudience.
 
 +!callPunch
-  <- move(turn);
+  <- !changeDirection;
      say(callpunch);
      .wait(2000);
-     -+skit(kiss).
+     nextSkit(kiss).
+
++skit(baby)
+  <- .wait(2000);
+     !getBaby.
+
++!getBaby : emotion(tired) | emotion(doubtful) | emotion(scared) | emotion(unhappy) | emotion(afraid)
+  <- say(giveUp);
+     !moveTo(offstageRight).
+
++!getBaby
+  <- say(getBaby);
+     .wait("+audienceYes", 5000);
+     !moveTo(offstageRight);
+     .wait(2000);
+     anim(babyside);
+     !moveTo(stageRight);
+     .wait(2000);
+     say(lookAfterBaby);
+     .wait(2000);
+     !moveTo(offStageRight);
+     -+nextSkit(babysit).
+     
+
+-!getBaby
+  <- !getSad;
+     !getBaby.
+     
+
++skit(kiss)
+  <- !avoidKisses.
+
++!avoidKisses : emotion(delighted)
+  <- true.
+
++!avoidKisses : not emotion(delighted)
+  <- !getHappy;
+     !run;
+     .wait(1000);
+     !avoidKisses.
+
+
++!run : punchPos(X) & pos(Y) & not (immLeft(X, Y) | immRight(X, Y) | X == Y)
+  <- .wait(2000).
+
++!run : punchPos(X) & pos(Y) & (immLeft(X, Y) | immRight(X, Y) | X == Y)
+  <- ?oppositeOf(Y, Z);
+     !moveTo(Z).
+
++!run
+  <- .print("Running failed").
+    
 
   
 

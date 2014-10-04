@@ -52,6 +52,8 @@ otherPos(offstageLeft).
 
 /* Plans */
 
+/*
+
 +!resetScene : true
 	<- -+valence(1);
      .print("Police reset");
@@ -75,6 +77,7 @@ otherPos(offstageLeft).
 	<- !arrestPunch.
 		
 -!g[.print("Fail plan triggered")].
+*/
 
 /*
 +currentSkit(search) : audienceYes
@@ -84,6 +87,8 @@ otherPos(offstageLeft).
 		-audienceYes;
 		!lookForPunch.
 */
+
+/*
 		
 +!noiseDetected
 	<- pass.
@@ -131,10 +136,6 @@ otherPos(offstageLeft).
      !moveTowardsOther;
      anim(hit).
 
-/*
-+!subduePunch : not canSeeOther
-  <- !arrestPunch.
-*/
 
 +!lookForPunch : emotion(angry) | emotion(furious)
  <- !subduePunch.
@@ -181,9 +182,6 @@ otherPos(offstageLeft).
 		.wait(2000);
 		!resetScene.
 
-
-// check emotion here
-
 +otherPos(X) : alive(yes)
 	<- !evade.
 
@@ -194,13 +192,6 @@ otherPos(offstageLeft).
 	<- .print("Police is getting hit");
 		!takeDamage.
 
-
-/*
-+!evade : pos(X) & otherPos(Y) & at(X, Y)
-	<- !moveForward; // randomly
-	   .random(R);
-	   !increaseArousal(R). // randomly
-*/
 
 +!evade : pos(X) & otherPos(Y) & neighbour(X, Y)
 	<- !moveForward; // randomly
@@ -269,8 +260,6 @@ otherPos(offstageLeft).
 	.print("Police's health is ", X, ".");
 	-+health(X - 1).
 	
-	
-
-
+*/
 
 	

@@ -142,100 +142,47 @@ public class BsfAgent extends MindInspectorAgArch {
             Value functor = jr.findValue("FUNCTOR"); 
             Value value = jr.findValue("VALUE"); 
 
-            // How do I do this safely?
-            //@SuppressWarnings("unchecked")
-            //LinkedList<String> termList = (LinkedList<String>) terms.m_object;
-
             m_plist.clear();
 
             if (agname != null && functor != null && value != null) {
               if (functor.m_object.toString().equals("say")) {
-                //System.out.println(termList.getFirst());
-                // Something needs to be published that an agent is speaking
                 if (!agname.m_object.toString().equals(m_name)) {
-                  m_percept = "otherSpeaking(" + value.m_object.toString() + ").";
+                  m_percept = "speaking(" + agname.m_object.toString() + ", " + value.m_object.toString() + ").";
 
-                  /*
-                     final Literal speaking = Literal.parseLiteral("otherSpeaking(" + termList.getFirst() + ").");
-                     if (!m_plist.contains(speaking) & speaking != null) {
-                     m_plist.add(speaking);
-                     }
-                     new Thread() {
-                     public void run() {
-                     try {
-                     Thread.sleep(2000);
-                     m_plist.remove(speaking);
-                  //m_plist.clear();
-                  } catch (InterruptedException e) {
-                  // TODO Auto-generated catch block
-                  e.printStackTrace();
-                  }
-                     }
-                     }.start();
-                     */
                 }
 
-                // looks like we'll need a percept buffer
-                //m_percept = "interruption.";
               }
               if (functor.m_object.toString().equals("move")) {
-                //System.out.println(termList.getFirst());
-                //System.out.println(agname.m_object.toString());
-                //System.out.println(value.m_object.toString());
-                // Something needs to be published that an agent is speaking
                 if (!agname.m_object.toString().equals(m_name)) {
-                  m_percept = "otherMoved(" + value.m_object.toString() + ").";
+                  m_percept = "moved(" + agname.m_object.toString() + ", " + value.m_object.toString() + ").";
 
-                  /*
-                     final Literal moved = Literal.parseLiteral("otherMoved(" + termList.getFirst() + ").");
-                     m_plist.add(moved);
-                     if (!m_plist.contains(moved) & moved != null) {
-                     m_plist.add(moved);
-                     }
-                     new Thread() {
-                     public void run() {
-                     try {
-                     Thread.sleep(300);
-                     m_plist.remove(moved);
-                  //m_plist.clear();
-                  } catch (InterruptedException e) {
-                  // TODO Auto-generated catch block
-                  e.printStackTrace();
-                  }
-                     }
-                     }.start();
-                     */
                 }
               }
               if (functor.m_object.toString().equals("anim")) {
-                //System.out.println(termList.getFirst());
                 // Something needs to be published that an agent is speaking
                 if (!agname.m_object.toString().equals(m_name)) {
-                  m_percept = "otherAction(" + value.m_object.toString() + ").";
-                  m_plist.add(Literal.parseLiteral("otherAction(" + value.m_object.toString() + ")."));
+                  m_percept = "action(" + agname.m_object.toString() + ", " + value.m_object.toString() + ").";
+                  //m_plist.add(Literal.parseLiteral("otherAction(" + value.m_object.toString() + ")."));
                 }
               }
               if (functor.m_object.toString().equals("scene")) {
-                //System.out.println(termList.getFirst());
                 // Something needs to be published that an agent is speaking
                 if (!agname.m_object.toString().equals(m_name)) {
                   m_percept = "scene(" + value.m_object.toString() + ").";
-                  m_plist.add(Literal.parseLiteral("scene(" + value.m_object.toString() + ")."));
+                  //m_plist.add(Literal.parseLiteral("scene(" + value.m_object.toString() + ")."));
                 }
               }
-              if (functor.m_object.toString().equals("skit")) {
-                //System.out.println(termList.getFirst());
+              if (functor.m_object.toString().equals("nextSkit")) {
                 // Something needs to be published that an agent is speaking
-                  m_percept = "skit(" + value.m_object.toString() + ").";
-                  m_plist.add(Literal.parseLiteral("skit(" + value.m_object.toString() + ")."));
+                  m_percept = "nextSkit(" + value.m_object.toString() + ").";
+                  //m_plist.add(Literal.parseLiteral("nextSkit(" + value.m_object.toString() + ")."));
               }
 
               if (functor.m_object.toString().equals("input")) {
-                //System.out.println(termList.getFirst());
                 // Something needs to be published that an agent is speaking
                 if (!agname.m_object.toString().equals(m_name)) {
                   m_percept = "input(" + value.m_object.toString() + ").";
-                  m_plist.add(Literal.parseLiteral("input(" + value.m_object.toString() + ")."));
+                  //m_plist.add(Literal.parseLiteral("input(" + value.m_object.toString() + ")."));
                 }
               }
 
@@ -287,10 +234,6 @@ public class BsfAgent extends MindInspectorAgArch {
            }
            */
         }
-      //System.out.println("Number of percepts: " + l.size());
-      //if (l.size() > 0) {
-      //System.out.println("Percept: " + l.get(0).toString());
-      //}
       return l;
       }
 

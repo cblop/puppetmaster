@@ -11,42 +11,58 @@
 
 name(punch).
 direction(right).
-skit(free).
+//skit(free).
+
+//skit(chase) :- feeling(furious | angry) & other(judy).
 
 
-skit(chase) :- feeling(furious | angry) & other(judy).
-
-/*
-feeling(0, -1, annoyed, slow).
-feeling(0, 0, alert, slow).
-feeling(0, 1, vigilant, medium).
-feeling(-1, -1, sulky, medium).
-feeling(-1, 0, angry, fast).
-feeling(-1, 1, furious, fast).
-feeling(1, -1, vicious, fast).
-feeling(1, 0, malicious, fast).
-feeling(1, 1, excited, medium).
-*/
-
-emotion(alert).
-
-speed(medium).
-
-waitTime(slow, 3000).
-waitTime(medium, 2000).
-waitTime(fast, 1000).
-
-energy(5).
-
-interruption.
+//energy(5).
 
 pos(offstageLeft).
 otherPos(offstageRight).
 
-
 valence(0).
 arousal(0).
 dominance(1).
+
+!changeMood.
+
++skit(kiss)
+  <- ?otherPos(X);
+     !moveNextTo(X);
+     !kissJudy.
+
++!kissJudy
+  <- say(askKiss);
+     .wait("+audienceYes", 5000);
+     // should also ask Judy!
+     say(willKiss);
+     !kissChase.
+
+-!kissJudy
+  <- .print("Kissing failed").
+
+// have different outcomes depending on mood and other character. Kiss or kill.
+
++!kissChase : pos(X) & otherPos(Z) & X == Z
+  <- say(kiss);
+     nextSkit(baby).
+
+
++!kissChase : pos(X) & otherPos(Y) & not X == Z
+  <- .print("Trying to chase...");
+     .wait(2000);
+     !moveTo(Y);
+     !kissChase.
+
+
+-!kissChase
+  <- .print("chasing failed");
+     ?pos(P);
+     ?otherPos(X);
+     .print("Scene, pos, other: ", P, ", ", X);
+     .wait(1000);
+     !kissChase.
 
 
 /* Initial goals */
@@ -60,6 +76,8 @@ dominance(1).
 +otherPos(X) : true
 	<- ?leftOf(Y, Z).
 */
+
+/*
 
 +!resetScene : true
 	<- -+valence(0);
@@ -253,4 +271,6 @@ dominance(1).
   <- !moveTo(offstageLeft);
      .wait(2000);
      nextScene(next).
+
+*/
 	

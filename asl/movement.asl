@@ -1,7 +1,10 @@
 locations(offstageLeft, stageLeft, stageCentre, stageRight, offstageRight).
 
-immLeft(X, Y) :- locations(_, X, Y, _, _) | locations(_, _, X, Y, _).
-immRight(X, Y) :- locations(_, Y, X, _, _) | locations(_, _, Y, X, _).
+immLeft(X, Y) :- locations(X, Y, _, _, _) | locations(_, X, Y, _, _) | locations(_, _, X, Y, _) | locations(_, _, _, X, Y).
+immRight(X, Y) :- locations(_, Y, X, _, _) | locations(_, _, Y, X, _) | locations(Y, X, _, _, _) | locations(_, _, _, Y, X).
+immLeft(X, Y) :- locations(X, _, _, _, _) & locations(Y, _, _, _, _).
+immRight(X, Y) :- locations(_, _, _, _, Y) & locations(Y, _, _, _, Y).
+
 
 neighbour(X, Y) :- immLeft(X, Y) | immRight(X, Y).
 
@@ -15,17 +18,19 @@ opposite(X) :- pos(stageRight) & locations(_, X, _, _, _).
 opposite(X) :- pos(stageCentre) & direction(right) & locations(_, _, _, X, _).
 opposite(X) :- pos(stageCentre) & direction(left) & locations(_, X, _, _, _).
 
+isNextTo(X, Y) :- immLeft(X, Y) & direction(right).
+isNextTo(X, Y) :- immRight(X, Y) & direction(left).
+
 oppositeOf(X, Y) :- locations(_, Y, _, X, _) | locations(_, X, _, Y, _) | locations(X, _, _, _, Y) | locations(Y, _, _, _, X) | locations(_, _, X, Y, _).
 				
 at(X, Y) :- X == Y.
-
 
 rightOfOther :- pos(X) & otherPos(Y) & rightOf(X, Y).
 leftOfOther :- pos(X) & otherPos(Y) & leftOf(X, Y).
 
 otherBehind :- (rightOfOther & direction(right)) | (leftOfOther & direction(left)).
 
-canSeeOther :- not otherBehind & not otherPos(offstageLeft) & not otherPos(offstageRight). 
+canSeeOther :- scene(X) & not otherBehind & not otherPos(offstageLeft) & not otherPos(offstageRight). 
 
 
 
@@ -43,16 +48,25 @@ canSeeOther :- not otherBehind & not otherPos(offstageLeft) & not otherPos(offst
 	   */
 	   
 
++moved(X, Y) : X == punch
+	<- -+punchPos(Y).
 
-+otherMoved(X) : _
-	<- -+otherPos(X).
++moved(X, Y) 
+	<- -+otherPos(Y).
+
++!appearAt(X)
+  <- -+pos(X);
+     appear(X).
 
 +!moveTo(X) : alive(no)
 	<- -+pos(X);
 	   move(X).
 
++!moveTo(X) : pos(Y) & Y == X
+  <- !changeDirection.
+
 +!moveTo(X)
-	<- anim(rest);
+	<- //anim(rest);
 		-+pos(X);
 	   move(X).
 
@@ -88,14 +102,20 @@ canSeeOther :- not otherBehind & not otherPos(offstageLeft) & not otherPos(offst
 +!moveTowardsOther : not otherBehind
 	<- !moveForward.
 
-+!moveNextTo(Y) : direction(right)
-  <- ?immLeft(X, Y);
-     !moveTo(X).
++!moveNextTo(X) : pos(Z) & rightOf(X, Z)
+  <- ?immLeft(Y, X);
+     !moveTo(Y).
 
-+!moveNextTo(Y) : direction(left)
-  <- ?immRight(X, Y);
-     !moveTo(X).
++!moveNextTo(X) : pos(Z) & leftOf(X, Z)
+  <- ?immRight(Y, X);
+     !moveTo(Y).
 
 +!moveNextTo(X)
-  <-!moveTo(X).
+  <- ?immLeft(Y, X);
+     !moveTo(Y).
+
+-!moveNextTo(X)
+  <- ?immLeft(Y, X);
+     ?immRight(Y, Z);
+    .print("MoveNextTo failed: ", X, ", ", Y, ", ", Z).
 
