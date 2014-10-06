@@ -27,42 +27,81 @@ dominance(1).
 
 !changeMood.
 
+// Goals for each skit happen here
+
 +skit(kiss)
   <- ?otherPos(X);
      !moveNextTo(X);
      !kissJudy.
+
++skit(babysit)
+  <- .wait(2000);
+     -+other(baby);
+     say(comeBaby);
+     .wait(2000);
+     !getBaby.
+
++skit(killjudy)
+  <- .wait(2000);
+     -+other(judy);
+     true.
+
++!getBaby : emotion(furious)
+  <- !hitOther.
+
++!getBaby : not emotion(furious)
+  <- !chaseOther;
+     .wait(2000);
+     !getMad;
+     !getBaby.
+
+
++!hitOther : otherPos(offstageRight)
+  <- true.
+
++!hitOther : pos(X) & otherPos(Y) & isNextTo(X, Y)
+  <- anim(hit);
+     .wait(2000);
+     !hitOther.
+
++!hitOther : pos(X) & otherPos(Y) & not isNextTo(X, Y)
+  <- .wait(2000);
+     anim(hit);
+     !moveTo(Y);
+     !hitOther.
 
 +!kissJudy
   <- say(askKiss);
      .wait("+audienceYes", 5000);
      // should also ask Judy!
      say(willKiss);
-     !kissChase.
+     !chaseOther;
+     say(kiss);
+     nextSkit(baby).
 
 -!kissJudy
   <- .print("Kissing failed").
 
 // have different outcomes depending on mood and other character. Kiss or kill.
 
-+!kissChase : pos(X) & otherPos(Z) & X == Z
-  <- say(kiss);
-     nextSkit(baby).
++!chaseOther : pos(X) & otherPos(Z) & X == Z
+  <- true.
 
 
-+!kissChase : pos(X) & otherPos(Y) & not X == Z
++!chaseOther : pos(X) & otherPos(Y) & not X == Z
   <- .print("Trying to chase...");
      .wait(2000);
      !moveTo(Y);
-     !kissChase.
+     !chaseOther.
 
 
--!kissChase
+-!chaseOther
   <- .print("chasing failed");
      ?pos(P);
      ?otherPos(X);
      .print("Scene, pos, other: ", P, ", ", X);
      .wait(1000);
-     !kissChase.
+     !chaseOther.
 
 
 /* Initial goals */

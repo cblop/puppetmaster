@@ -17,6 +17,7 @@ public class RunShow {
   private static BsfAgent punchAgent;
   private static BsfAgent judyAgent;
   private static BsfAgent joeyAgent;
+  private static BsfAgent babyAgent;
   private static BsfAgent policeAgent;
   private static boolean debug = true;
   private static String eventNode;
@@ -39,6 +40,7 @@ public class RunShow {
     punchAgent = new BsfAgent("localhost", "punch", "punchuser", "punch.asl", eventNode);
     judyAgent = new BsfAgent("localhost", "judy", "judyuser", "judy.asl", eventNode);
     joeyAgent = new BsfAgent("localhost", "joey", "joeyuser", "joey.asl", eventNode);
+    babyAgent = new BsfAgent("localhost", "baby", "babyuser", "baby.asl", eventNode);
     policeAgent = new BsfAgent("localhost", "police", "policeuser", "police.asl", eventNode);
 
     // This has to come after for some reason
@@ -86,6 +88,11 @@ public class RunShow {
     }.start();
     new Thread() {
       public void run() {
+        babyAgent.run();
+      }
+    }.start();
+    new Thread() {
+      public void run() {
         policeAgent.run();
       }
     }.start();
@@ -110,6 +117,7 @@ String line = "";
    punchAgent.cleanup();
    judyAgent.cleanup();
    policeAgent.cleanup();
+   babyAgent.cleanup();
    System.exit(0);
 
   }
@@ -135,10 +143,11 @@ String line = "";
     punchAgent.reset();
     judyAgent.reset();
     joeyAgent.reset();
+    babyAgent.reset();
     policeAgent.reset();
 
     // don't forget! FIFO!
-    //sceneQueue.add("intro");
+    sceneQueue.add("intro");
     sceneQueue.add("judy");
     //sceneQueue.add("police");
 

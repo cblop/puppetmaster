@@ -39,6 +39,13 @@ myEmotion(delighted) :- valence(1) & arousal(1) & dominance(-1).
      ?arousal(Y);
     .print("changeMood failed!", X, " ", Y).
 
++!getMad
+  <- .random(R);
+     .random(S);
+     !increaseArousal(R);
+     !decreaseValence(S);
+     !changeMood.
+
 +!getSad
   <- .random(R);
      .random(S);

@@ -9,3 +9,6 @@
 +nextSkit(X)
   <- -+skit(X).
 
++action(X, Y)
+  <- -+otherAction(Y).
+

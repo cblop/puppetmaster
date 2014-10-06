@@ -32,6 +32,16 @@ otherBehind :- (rightOfOther & direction(right)) | (leftOfOther & direction(left
 
 canSeeOther :- scene(X) & not otherBehind & not otherPos(offstageLeft) & not otherPos(offstageRight). 
 
++!run : punchPos(X) & pos(Y) & not (immLeft(X, Y) | immRight(X, Y) | X == Y)
+  <- .wait(2000).
+
++!run : punchPos(X) & pos(Y) & (immLeft(X, Y) | immRight(X, Y) | X == Y)
+  <- ?oppositeOf(Y, Z);
+     !moveTo(Z).
+
++!run
+  <- .print("Running failed").
+
 
 
 /*

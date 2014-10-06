@@ -71,8 +71,9 @@ punchPos(offstageLeft).
      .wait(2000);
      say(lookAfterBaby);
      .wait(2000);
-     !moveTo(offStageRight);
-     -+nextSkit(babysit).
+     anim(rest);
+     !moveTo(offstageRight);
+     nextSkit(babysit).
      
 
 -!getBaby
@@ -93,15 +94,6 @@ punchPos(offstageLeft).
      !avoidKisses.
 
 
-+!run : punchPos(X) & pos(Y) & not (immLeft(X, Y) | immRight(X, Y) | X == Y)
-  <- .wait(2000).
-
-+!run : punchPos(X) & pos(Y) & (immLeft(X, Y) | immRight(X, Y) | X == Y)
-  <- ?oppositeOf(Y, Z);
-     !moveTo(Z).
-
-+!run
-  <- .print("Running failed").
     
 
   
