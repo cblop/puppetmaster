@@ -19,6 +19,11 @@ dominance(1).
   <- !introduceShow.
 
 +!introduceShow
+  <- .wait(5000);
+     !moveTo(offstageRight).
+
+/*
++!introduceShow
   <- !moveTo(stageCentre);
      .wait(2000);
      say(start);
@@ -41,5 +46,7 @@ dominance(1).
   <- say(giveup);
      .wait(2000);
      !moveTo(offstageRight).
+
+*/
 
 
