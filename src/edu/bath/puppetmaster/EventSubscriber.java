@@ -46,7 +46,7 @@ public class EventSubscriber extends SensorClient {
 			public void handleIncomingReading (String node, String rdf) {
 				//System.out.println("Handling reading...");
 
-        //System.out.println(rdf);
+		        //System.out.println(rdf);
 
 				try {
 					JsonReading jr = new JsonReading();
@@ -56,18 +56,23 @@ public class EventSubscriber extends SensorClient {
 						logger.logJson(rdf);
 					}
 					
-					//System.out.println(rdf);
+					Value norm = jr.findValue("NORM0");
 					
 					Value agname = jr.findValue("AGENT");
 					Value functor = jr.findValue("FUNCTOR"); 
 					Value value = jr.findValue("VALUE"); 
 
-          System.out.println(agname.m_object.toString() + ", " + functor.m_object.toString() + ", " + value.m_object.toString());
+
+          			if (norm != null) {
+          				//System.out.println("NORM0 IS: " + norm.m_object.toString());
+						System.out.println(norm.m_object.toString());
+          			}
 					
 					
 					if (functor != null && value != null && agname != null) {
+	          			System.out.println(agname.m_object.toString() + ", " + functor.m_object.toString() + ", " + value.m_object.toString());
 
-                            if (functor.m_object.toString().equals("nextScene")) {
+                            if (functor.m_object.toString().equals("nextSceneInQueue")) {
                             	RunShow.nextScene();
                             }
 

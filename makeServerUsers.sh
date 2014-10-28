@@ -7,3 +7,4 @@ sudo ejabberdctl register baby cblop.com babyuser
 sudo ejabberdctl register police cblop.com policeuser
 sudo ejabberdctl register anim cblop.com animuser
 sudo ejabberdctl register log cblop.com loguser
+sudo ejabberdctl register inst cblop.com instuser

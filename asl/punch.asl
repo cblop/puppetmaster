@@ -197,7 +197,7 @@ dominance(1).
 -currentScene(_) : _
 	<- !moveTo(offstageLeft);
 		.wait(2000);
-		nextScene(next).
+		nextSceneInQueue(next).
 
 +!boast : true
 	<- .print("Punch is boasting");

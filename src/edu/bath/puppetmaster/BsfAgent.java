@@ -138,6 +138,8 @@ public class BsfAgent extends MindInspectorAgArch {
             JsonReading jr = new JsonReading();
             jr.fromJSON(rdf);
 
+            Value norm = jr.findValue("NORM0");
+
             Value agname = jr.findValue("AGENT");
             Value functor = jr.findValue("FUNCTOR"); 
             Value value = jr.findValue("VALUE"); 
@@ -165,10 +167,10 @@ public class BsfAgent extends MindInspectorAgArch {
                   //m_plist.add(Literal.parseLiteral("otherAction(" + value.m_object.toString() + ")."));
                 }
               }
-              if (functor.m_object.toString().equals("scene")) {
+              if (functor.m_object.toString().equals("nextScene")) {
                 // Something needs to be published that an agent is speaking
                 if (!agname.m_object.toString().equals(m_name)) {
-                  m_percept = "scene(" + value.m_object.toString() + ").";
+                  m_percept = "nextScene(" + value.m_object.toString() + ").";
                   //m_plist.add(Literal.parseLiteral("scene(" + value.m_object.toString() + ")."));
                 }
               }
@@ -186,6 +188,11 @@ public class BsfAgent extends MindInspectorAgArch {
                 }
               }
 
+            }
+
+            if (norm != null) {
+              //System.out.println("Norm added to percepts: " + norm.m_object.toString().replace(",pj", ""));
+              m_percept = norm.m_object.toString().replace(",pj", "") + ".";
             }
 
 

@@ -24,6 +24,9 @@
     <fileset dir="lib/mongodb">
         <include name="**/*.jar" />
     </fileset>
+    <fileset dir="lib/inst">
+        <include name="**/*.jar" />
+    </fileset>
     <!--
     <pathelement location="build" />
     -->

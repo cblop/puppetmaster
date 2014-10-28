@@ -13,39 +13,60 @@ import jason.JasonException;
 import org.jivesoftware.smack.Connection;
 import org.jivesoftware.smack.XMPPException;
 
+import edu.bath.InstManager;
+
 public class RunShow {
   private static BsfAgent punchAgent;
   private static BsfAgent judyAgent;
   private static BsfAgent joeyAgent;
   private static BsfAgent babyAgent;
   private static BsfAgent policeAgent;
+  private static InstManager man;
   private static boolean debug = true;
   private static String eventNode;
   private static Queue<String> sceneQueue; 
   private static EventPublisher pubber;
 
-  public static void main(String[] args) throws XMPPException, JasonException, IOException {
+  public static void main(String[] args) throws XMPPException, JasonException, IOException, InterruptedException {
     sceneQueue = new LinkedList<String>();
 
-    eventNode = "ev";
+    eventNode = "NODE_PERCEPT";
+    String host = "localhost";
 
     EventSubscriber esub;
 
-    esub = new EventSubscriber("localhost", "log", "loguser", true);
+    esub = new EventSubscriber(host, "log", "loguser", true);
 
-    pubber = new EventPublisher("localhost", "director", "directoruser", eventNode);
+    pubber = new EventPublisher(host, "director", "directoruser", eventNode);
 
     //Connection conn = esub.getConnection();
 
-    punchAgent = new BsfAgent("localhost", "punch", "punchuser", "punch.asl", eventNode);
-    judyAgent = new BsfAgent("localhost", "judy", "judyuser", "judy.asl", eventNode);
-    joeyAgent = new BsfAgent("localhost", "joey", "joeyuser", "joey.asl", eventNode);
-    babyAgent = new BsfAgent("localhost", "baby", "babyuser", "baby.asl", eventNode);
-    policeAgent = new BsfAgent("localhost", "police", "policeuser", "police.asl", eventNode);
+    punchAgent = new BsfAgent(host, "punch", "punchuser", "punch.asl", eventNode);
+    judyAgent = new BsfAgent(host, "judy", "judyuser", "judy.asl", eventNode);
+    joeyAgent = new BsfAgent(host, "joey", "joeyuser", "joey.asl", eventNode);
+    babyAgent = new BsfAgent(host, "baby", "babyuser", "baby.asl", eventNode);
+    policeAgent = new BsfAgent(host, "police", "policeuser", "police.asl", eventNode);
 
     // This has to come after for some reason
     // Seems like it's bad for subscribers to create nodes?
     esub.subscribeTo(eventNode);
+
+    String[] instArgs = {host, "inst", "instuser", "pj_model.ial"};
+
+    man = new InstManager(instArgs);
+    man.initialiseBSF();
+
+    new Thread() {
+      public void run() {
+        try {
+          man.run();
+        }
+        catch(XMPPException e) {
+
+        }
+      }
+    }.start();
+
 
     //punchAgent.setupLogger();
     //judyAgent.setupLogger();
@@ -161,7 +182,8 @@ String line = "";
     else {
       try {
         System.out.println("New Scene");
-        pubber.publishEvent("director", "scene", sceneQueue.remove());
+        pubber.publishEvent("director", "nextScene", sceneQueue.remove());
+        //pubber.publishEvent("director", "scene", sceneQueue.remove());
       } catch (UnsupportedEncodingException e) {
         // TODO Auto-generated catch block
         e.printStackTrace();

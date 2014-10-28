@@ -27,7 +27,7 @@ dominance(1).
      .wait(2000);
      !moveTo(offstageRight);
      .wait(2000);
-     nextScene(next).
+     nextSceneInQueue(next).
 
 -!introduceShow : not emotion(sulky)
   <- say(noresponse);
@@ -41,4 +41,5 @@ dominance(1).
   <- say(giveup);
      .wait(2000);
      !moveTo(offstageRight).
+
 

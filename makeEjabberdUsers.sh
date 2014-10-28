@@ -7,3 +7,4 @@ sudo ejabberdctl register baby localhost babyuser
 sudo ejabberdctl register police localhost policeuser
 sudo ejabberdctl register anim localhost animuser
 sudo ejabberdctl register log localhost loguser
+sudo ejabberdctl register inst localhost instuser

@@ -32,6 +32,10 @@ otherBehind :- (rightOfOther & direction(right)) | (leftOfOther & direction(left
 
 canSeeOther :- scene(X) & not otherBehind & not otherPos(offstageLeft) & not otherPos(offstageRight). 
 
++obl(move(X, Y), D, V) : name(N) & X == N
+  <- .print("Agent ", X, " moveObl: ", Y);
+  	 !moveTo(Y).
+
 +!run : punchPos(X) & pos(Y) & not (immLeft(X, Y) | immRight(X, Y) | X == Y)
   <- .wait(2000).
 
